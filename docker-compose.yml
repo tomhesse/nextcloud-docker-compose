@@ -34,6 +34,12 @@ services:
       - "postgres_password"
       - "postgres_user"
 
+  cache:
+    image: "redis:7-alpine"
+    restart: "unless-stopped"
+    networks:
+      - "backend"
+
   app:
     image: "nextcloud:25"
     restart: "unless-stopped"
@@ -47,6 +53,7 @@ services:
       - "POSTGRES_DB_FILE=/run/secrets/postgres_db"
       - "POSTGRES_USER_FILE=/run/secrets/postgres_user"
       - "POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password"
+      - "REDIS_HOST=cache"
       - "TRUSTED_PROXIES=${TRUSTED_PROXIES}"
     secrets:
       - "postgres_db"
